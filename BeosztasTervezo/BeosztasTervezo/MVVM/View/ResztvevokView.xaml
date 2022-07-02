@@ -1,0 +1,224 @@
+﻿<UserControl x:Class="BeosztasTervezo.MVVM.View.ResztvevokView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:BeosztasTervezo.MVVM.View"
+             mc:Ignorable="d" 
+             d:DesignHeight="450" d:DesignWidth="800">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        
+        <StackPanel Grid.Column="0" >
+            <DataGrid x:Name="DG_resztvevok" Margin="5" Height="430"
+                          IsReadOnly="True"
+                          CanUserSortColumns="False"
+                          CanUserReorderColumns="False"
+                          CanUserResizeColumns="False"
+                          CanUserResizeRows="False"
+                          AutoGenerateColumns="False"
+                          SelectionChanged="DG_resztvevok_SelectionChanged"
+                          >
+                <DataGrid.Columns>
+                    <DataGridTextColumn Header="Név" 
+                                            Binding="{Binding Nev}"
+                                            Width="*"/>
+                </DataGrid.Columns>
+            </DataGrid>
+            <Button x:Name="BTN_Tervezés"
+                    IsEnabled="True"
+                    Height="45" Width="100" 
+                    Margin="0,20,0,0"
+                    Content="Tervezés" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Click="BTN_Tervezés_Click"
+                    Background="LightGreen"
+                    Padding="5"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    />
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="1" Margin="5">
+            <StackPanel Orientation="Horizontal" Margin="0,50,0,20">
+                <Label Content="Név"
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+                <TextBox
+                     x:Name="TB_Nev"
+                     Width="250"
+                     Height="45"
+                     VerticalAlignment="Center"
+                     />
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,20">
+                <Label Content="Nem"
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+                <ComboBox Width="250"
+                          Margin="15,0,0,0"
+                     Height="35"
+                     VerticalAlignment="Center"
+                          x:Name="CB_Nem"
+                     >
+                    <ComboBoxItem Content="Ferfi"/>
+                    <ComboBoxItem Content="No"/>
+                </ComboBox>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,5,0,20">
+                <Label Content="Prioritás"
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+                <ComboBox Width="250"
+                          Margin="15,0,0,0"
+                     Height="35"
+                     VerticalAlignment="Center"
+                          x:Name="CB_Prio"
+                     >
+                    <ComboBoxItem Content="1"/>
+                    <ComboBoxItem Content="2"/>
+                    <ComboBoxItem Content="3"/>
+                </ComboBox>
+                <Label Content="1 akinek csak pár időpont jó, a többiek 2, 3 nem osztunk ki."
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal" Margin="0,10,0,20">
+                <Label Content="Család"
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+                <TextBox 
+                     x:Name="TB_Csalad"
+                     Width="250"
+                     Height="45"
+                     VerticalAlignment="Center"
+                     
+                     />
+                <Label Content="Ide egy számot kell beírni, bővebben a leírásban."
+                       Foreground="White"
+                       FontSize="17"
+                       VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <Label Content="Szerda:" Foreground="White" FontSize="17"/>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="8-9" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ8" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="9-10" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ9" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="10-11" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ10" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="11-12" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ11" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="14-15" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ14" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="15-16" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ15" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="16-17" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ16" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="17-18" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZ17" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Label Content="Péntek:" Foreground="White" FontSize="17"/>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="8-9" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P8" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="9-10" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P9" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="10-11" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P10" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="11-12" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P11" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="14-15" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P14" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="15-16" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P15" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="16-17" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P16" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="17-18" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_P17" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+
+            <Label Content="Szombat:" Foreground="White" FontSize="17"/>
+            <StackPanel Orientation="Horizontal" Margin="5">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="8-9" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZO8" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="9-10" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZO9" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="10-11" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZO10" VerticalAlignment="Center"/>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="11-12" Foreground="White" FontSize="14"/>
+                    <CheckBox x:Name="CB_SZO11" VerticalAlignment="Center"/>
+                </StackPanel>
+            </StackPanel>
+            <Button x:Name="BTN_Mentes"
+                    IsEnabled="False"
+                    Height="45" Width="100" 
+                    Margin="0,20,0,0"
+                    Content="Mentés" 
+                    VerticalAlignment="Center"
+                    HorizontalAlignment="Center"
+                    Click="Button_Click"
+                    Background="Orange"
+                    FontSize="18"
+                    FontWeight="Bold"
+                    BorderThickness="0"
+                    />
+        </StackPanel>
+    </Grid>
+</UserControl>

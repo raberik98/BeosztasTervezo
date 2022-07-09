@@ -38,34 +38,37 @@ namespace BeosztasTervezo.MVVM.View
         {
             try
             {
-               NevLista.Add(new ResztvevoClass(String.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25}",
-               NevLista.Count,
-               TB_Nev.Text,
-               CB_Nem.SelectedIndex + 1,
-               int.Parse(TB_Csalad.Text),
-               CB_Prio.SelectedIndex + 1,
-               CB_SZ8.IsChecked,
-               CB_SZ9.IsChecked,
-               CB_SZ10.IsChecked,
-               CB_SZ11.IsChecked,
-               CB_SZ14.IsChecked,
-               CB_SZ15.IsChecked,
-               CB_SZ16.IsChecked,
-               CB_SZ17.IsChecked,
-               CB_P8.IsChecked,
-               CB_P9.IsChecked,
-               CB_P10.IsChecked,
-               CB_P11.IsChecked,
-               CB_P14.IsChecked,
-               CB_P15.IsChecked,
-               CB_P16.IsChecked,
-               CB_P17.IsChecked,
-               CB_SZO8.IsChecked,
-               CB_SZO9.IsChecked,
-               CB_SZO10.IsChecked,
-               CB_SZO11.IsChecked,
-               0
-               )));
+                NevLista.Add(new ResztvevoClass(String.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28}",
+                NevLista.Count,
+                TB_Nev.Text,
+                CB_Nem.SelectedIndex + 1,
+                int.Parse(TB_Csalad.Text),
+                2,
+                CB_SZ8.IsChecked,
+                CB_SZ9.IsChecked,
+                CB_SZ10.IsChecked,
+                CB_SZ11.IsChecked,
+                CB_SZ14.IsChecked,
+                CB_SZ15.IsChecked,
+                CB_SZ16.IsChecked,
+                CB_SZ17.IsChecked,
+                CB_P8.IsChecked,
+                CB_P9.IsChecked,
+                CB_P10.IsChecked,
+                CB_P11.IsChecked,
+                CB_P14.IsChecked,
+                CB_P15.IsChecked,
+                CB_P16.IsChecked,
+                CB_P17.IsChecked,
+                CB_SZO8.IsChecked,
+                CB_SZO9.IsChecked,
+                CB_SZO10.IsChecked,
+                CB_SZO11.IsChecked,
+                0,
+                CB_csakCsaladdal.IsChecked,
+                true,
+                DateTime.Now
+                )));
 
                 ResztvevoClass.MentesFajlba(NevLista);
                 MessageBoxResult result = MessageBox.Show("Új résztvevő hozzáadása megtörtént!");
@@ -73,7 +76,7 @@ namespace BeosztasTervezo.MVVM.View
                 TB_Nev.Text = "";
                 CB_Nem.SelectedIndex = 0;
                 TB_Csalad.Text = "";
-                CB_Prio.SelectedIndex = 0;
+                //CB_Prio.SelectedIndex = 0;
                 CB_SZ8.IsChecked = false;
                 CB_SZ9.IsChecked = false;
                 CB_SZ10.IsChecked = false;
@@ -94,6 +97,7 @@ namespace BeosztasTervezo.MVVM.View
                 CB_SZO9.IsChecked = false;
                 CB_SZO10.IsChecked = false;
                 CB_SZO11.IsChecked = false;
+                CB_csakCsaladdal.IsChecked = false;
             }
             catch (Exception)
             {

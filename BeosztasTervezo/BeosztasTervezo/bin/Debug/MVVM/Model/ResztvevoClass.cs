@@ -36,6 +36,9 @@ namespace BeosztasTervezo.MVVM.Model
         public bool szo10 { get; set; }
         public bool szo11 { get; set; }
         public int alkalmak { get; set; }
+        public bool csakCsaladdal { get; set; }
+        public bool aktív { get; set; }
+        public DateTime resztvetelDatum { get; set; }
 
         public ResztvevoClass() { }
 
@@ -68,6 +71,9 @@ namespace BeosztasTervezo.MVVM.Model
             this.szo10 = bool.Parse(adatok[23]);
             this.szo11 = bool.Parse(adatok[24]);
             this.alkalmak = 0;
+            this.csakCsaladdal = bool.Parse(adatok[26]);
+            this.aktív = bool.Parse(adatok[27]);
+            this.resztvetelDatum = DateTime.Parse(adatok[28]);
         }
 
         public static void MentesFajlba(ObservableCollection<ResztvevoClass> NevLista)
@@ -81,7 +87,7 @@ namespace BeosztasTervezo.MVVM.Model
             List<string> segedStringLista = new List<string>();
             for (int i = 0; i < NevLista.Count; i++)
             {
-                segedStringLista.Add(String.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25}",
+                segedStringLista.Add(String.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10};{11};{12};{13};{14};{15};{16};{17};{18};{19};{20};{21};{22};{23};{24};{25};{26};{27};{28}",
                     NevLista[i].Id,
                     NevLista[i].Nev,
                     NevLista[i].Nem,
@@ -107,7 +113,10 @@ namespace BeosztasTervezo.MVVM.Model
                     NevLista[i].szo9,
                     NevLista[i].szo10,
                     NevLista[i].szo11,
-                    NevLista[i].alkalmak
+                    NevLista[i].alkalmak,
+                    NevLista[i].csakCsaladdal,
+                    NevLista[i].aktív,
+                    NevLista[i].resztvetelDatum
                 ));
             }
             return segedStringLista;
@@ -115,208 +124,149 @@ namespace BeosztasTervezo.MVVM.Model
 
         public static List<int> IdopontVizsgalat(ObservableCollection<ResztvevoClass> NevLista, int IdopontIndex, List<int>banList)
         {
-            //if (banList.Count != 0)
-            //{
-            //    for (int i = 0; i < NevLista.Count; i++)
-            //    {
-            //        for (int j = 0; j < banList.Count; j++)
-            //        {
-            //            if (NevLista[i].Id == banList[j])
-            //            {
-            //                NevLista.RemoveAt(i);
-            //            }
-            //        }
-            //    }
-            //}
-
 
             List<string> segedLista = ResztvevoClass.ConvertObservableCollectionToStringArray(NevLista);
-            List<int> talalatPrioEgy = new List<int>();
-            List<int> talalatPrioKetto = new List<int>();
-            List<int> talalatPrioHarom = new List<int>();
+            List<int> talalatok = new List<int>();
             List<int> megfeleloPartnerek = new List<int>();
             Random r = new Random();
-            bool voltTalalat = false;
             int elsoTalalatIndex;
             int masodikTalalatIndex;
             List<int> Vegeredmeny = new List<int>();
 
-            //Három lista feltöltése azokkal akiknek jó az adott időpont prioritás szerint
+            //Találatok lista feltöltése azoknak az indexével akiknek jó az adott időpont 
             for (int i = 0; i < segedLista.Count; i++)
             {
                 string[] adatok = segedLista[i].Split(';');
                 if (bool.Parse(adatok[IdopontIndex]) == true)
                 {
-                    if (int.Parse(adatok[4]) == 1 && !banList.Contains(int.Parse(adatok[0])))
+                    if (adatok[27] == "True")
                     {
-                        talalatPrioEgy.Add(int.Parse(adatok[0]));
-                    }
-                    else if (int.Parse(adatok[4]) == 2 && !banList.Contains(int.Parse(adatok[0])))
-                    {
-                        talalatPrioKetto.Add(int.Parse(adatok[0]));
-                    }
-                    else if (!banList.Contains(int.Parse(adatok[0])))
-                    {
-                        talalatPrioHarom.Add(int.Parse(adatok[0]));
+                            talalatok.Add(int.Parse(adatok[0]));
                     }
                 }
             }
 
+
             //Az első résztvevő keresése prioritás szerint
-            if (talalatPrioEgy.Count != 0)
+           
+                elsoTalalatIndex = talalatok[r.Next(0,talalatok.Count - 1)];
+                for (int i = 0; i < talalatok.Count; i++)
+                {
+                    if (NevLista[talalatok[i]].resztvetelDatum < NevLista[elsoTalalatIndex].resztvetelDatum)
+                    {
+                        elsoTalalatIndex = talalatok[i];
+                    }
+                }
+
+
+            //Ha az első résztvevő csak családtaggal szereten menni akkor megpróbál egy családtagot keresni neki partnerként.
+            if (NevLista[elsoTalalatIndex].csakCsaladdal == true)
             {
-                int index = r.Next(0, talalatPrioEgy.Count - 1);
-                elsoTalalatIndex = talalatPrioEgy[index];
-                //NevLista.RemoveAt(index);
-            }
-            else if (talalatPrioEgy.Count == 0 && talalatPrioKetto.Count != 0)
-            {
-                int index = r.Next(0, talalatPrioKetto.Count - 1);
-                elsoTalalatIndex = talalatPrioKetto[index];
-                //NevLista.RemoveAt(index);
+                for (int i = 0; i < talalatok.Count; i++)
+                {
+                    if (NevLista[talalatok[i]].CsaladId == NevLista[elsoTalalatIndex].CsaladId)
+                    {
+                        megfeleloPartnerek.Add(talalatok[i]);
+                    }
+                }
             }
             else
             {
-                int index = r.Next(0, talalatPrioHarom.Count - 1);
-                elsoTalalatIndex = talalatPrioHarom[index];
-                //NevLista.RemoveAt(index);
-            }
+                //A második résztvevő lehetséges társainak a keresése
 
-            //A második résztvevő lehetséges társainak a keresése prioritás szerint
-            if (talalatPrioEgy.Count != 0)
-            {
-                for (int i = 0; i < talalatPrioEgy.Count-1; i++)
+
+                for (int i = 0; i < talalatok.Count - 1; i++)
                 {
-                    if (NevLista[elsoTalalatIndex].CsaladId != 0)
+                    if (NevLista[talalatok[i]].csakCsaladdal == true && NevLista[talalatok[i]].CsaladId == NevLista[elsoTalalatIndex].CsaladId)
                     {
-                        if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioEgy[i]].Nem || NevLista[elsoTalalatIndex].CsaladId == NevLista[talalatPrioEgy[i]].CsaladId)
-                        {
-                            if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioEgy[i]].Id)
-                            {
-
-                            }
-                            else
-                            {
-                                megfeleloPartnerek.Add(talalatPrioEgy[i]);
-                                voltTalalat = true;
-                            }
-                        }
+                        megfeleloPartnerek.Add(talalatok[i]);
                     }
                     else
                     {
-                        if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioEgy[i]].Nem)
+                        if (NevLista[elsoTalalatIndex].CsaladId != 0)
                         {
-                            if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioEgy[i]].Id)
+                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatok[i]].Nem || NevLista[elsoTalalatIndex].CsaladId == NevLista[talalatok[i]].CsaladId)
                             {
+                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatok[i]].Id)
+                                {
 
+                                }
+                                else
+                                {
+                                    megfeleloPartnerek.Add(talalatok[i]);
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatok[i]].Nem)
+                            {
+                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatok[i]].Id)
+                                {
+
+                                }
+                                else
+                                {
+                                    megfeleloPartnerek.Add(talalatok[i]);
+                                }
+                            }
+                        }
+                    }
+
+                }
+            }
+                
+
+                
+
+            if (megfeleloPartnerek.Count != 1)
+            {
+                //if (megfeleloPartnerek.Count == 1)
+                //{
+                //    if (NevLista[megfeleloPartnerek[0]].csakCsaladdal == true)
+                //    {
+                //        if (NevLista[megfeleloPartnerek[0]].CsaladId == NevLista[elsoTalalatIndex].CsaladId)
+                //        {
+                //            masodikTalalatIndex = megfeleloPartnerek[0];
+                //        }
+                //        else
+                //        {
+                //            masodikTalalatIndex = elsoTalalatIndex;
+                //        }
+                //    }
+                //    else
+                //    {
+                //        masodikTalalatIndex = megfeleloPartnerek[0];
+                //    }
+                //}
+                //else
+                //{
+                    masodikTalalatIndex = megfeleloPartnerek[r.Next(0, megfeleloPartnerek.Count - 1)];
+                    for (int i = 0; i < megfeleloPartnerek.Count; i++)
+                    {
+                        if (NevLista[megfeleloPartnerek[i]].resztvetelDatum < NevLista[masodikTalalatIndex].resztvetelDatum)
+                        {
+                            if (NevLista[megfeleloPartnerek[i]].csakCsaladdal == true)
+                            {
+                                if (NevLista[megfeleloPartnerek[i]].CsaladId == NevLista[elsoTalalatIndex].CsaladId)
+                                {
+                                    if (megfeleloPartnerek[i] != elsoTalalatIndex)
+                                    {
+                                        masodikTalalatIndex = megfeleloPartnerek[i];
+                                    }
+                                }
+                                
                             }
                             else
                             {
-                                megfeleloPartnerek.Add(talalatPrioEgy[i]);
-                                voltTalalat = true;
-                            }
-                        }
-                    }
-
-                    
-                }
-            }
-
-            if (!voltTalalat)
-            {
-                if (talalatPrioKetto.Count != 0)
-                {
-                    for (int i = 0; i < talalatPrioKetto.Count; i++)
-                    {
-                        if (NevLista[elsoTalalatIndex].CsaladId != 0)
-                        {
-                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioKetto[i]].Nem || NevLista[elsoTalalatIndex].CsaladId == NevLista[talalatPrioKetto[i]].CsaladId)
-                            {
-                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioKetto[i]].Id)
+                                if (megfeleloPartnerek[i] != elsoTalalatIndex)
                                 {
-
-                                }
-                                else
-                                {
-                                    megfeleloPartnerek.Add(talalatPrioKetto[i]);
-                                    voltTalalat = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioKetto[i]].Nem)
-                            {
-                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioKetto[i]].Id)
-                                {
-
-                                }
-                                else
-                                {
-                                    megfeleloPartnerek.Add(talalatPrioKetto[i]);
-                                    voltTalalat = true;
+                                    masodikTalalatIndex = megfeleloPartnerek[i];
                                 }
                             }
                         }
                     }
-                }
-            }
-            if (!voltTalalat)
-            {
-                if (talalatPrioHarom.Count != 0)
-                {
-                    for (int i = 0; i < talalatPrioHarom.Count; i++)
-                    {
-                        if (NevLista[elsoTalalatIndex].CsaladId != 0)
-                        {
-                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioHarom[i]].Nem || NevLista[elsoTalalatIndex].CsaladId == NevLista[talalatPrioHarom[i]].CsaladId)
-                            {
-                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioHarom[i]].Id)
-                                {
-
-                                }
-                                else
-                                {
-                                    megfeleloPartnerek.Add(talalatPrioHarom[i]);
-                                    voltTalalat = true;
-                                }
-                            }
-                        }
-                        else
-                        {
-                            if (NevLista[elsoTalalatIndex].Nem == NevLista[talalatPrioHarom[i]].Nem)
-                            {
-                                if (NevLista[elsoTalalatIndex].Id == NevLista[talalatPrioHarom[i]].Id)
-                                {
-
-                                }
-                                else
-                                {
-                                    megfeleloPartnerek.Add(talalatPrioHarom[i]);
-                                    voltTalalat = true;
-                                }
-                            }
-                        }
-                        
-                    }
-                }
-            }
-
-            if (megfeleloPartnerek.Count != 0)
-            {
-                //for (int i = 0; i < megfeleloPartnerek.Count; i++)
-                //{
-                //    if (megfeleloPartnerek[i] == elsoTalalatIndex)
-                //    {
-                //        megfeleloPartnerek.RemoveAt(i);
-                //    }
                 //}
-                masodikTalalatIndex = megfeleloPartnerek[r.Next(0, megfeleloPartnerek.Count - 1)];
-
-                //do
-                //{
-                //    masodikTalalatIndex = megfeleloPartnerek[r.Next(0, megfeleloPartnerek.Count - 1)];
-                //} while (elsoTalalatIndex == masodikTalalatIndex);
             }
             else
             {

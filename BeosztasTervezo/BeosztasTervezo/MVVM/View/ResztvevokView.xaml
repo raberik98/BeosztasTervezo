@@ -42,6 +42,27 @@
                     FontWeight="Bold"
                     BorderThickness="0"
                     />
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Szerda"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       Margin="0,0,10,0"/>
+                <CheckBox x:Name="CB_tervezoSzerda" VerticalAlignment="Center" IsChecked="True"/>
+                <Label Content="Péntek"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       Margin="0,0,10,0"/>
+                <CheckBox x:Name="CB_tervezoPentek" VerticalAlignment="Center" IsChecked="True"/>
+                <Label Content="Szombat"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       Margin="0,0,10,0"/>
+                <CheckBox x:Name="CB_tervezoSzombat" VerticalAlignment="Center" IsChecked="True"/>
+            </StackPanel>
+            
 
         </StackPanel>
 
@@ -75,7 +96,7 @@
                 </ComboBox>
             </StackPanel>
 
-            <StackPanel Orientation="Horizontal" Margin="0,5,0,20">
+            <!--<StackPanel Orientation="Horizontal" Margin="0,5,0,20">
                 <Label Content="Prioritás"
                        Foreground="White"
                        FontSize="17"
@@ -88,14 +109,13 @@
                      >
                     <ComboBoxItem Content="1"/>
                     <ComboBoxItem Content="2"/>
-                    <ComboBoxItem Content="3"/>
                 </ComboBox>
-                <Label Content="1 akinek csak pár időpont jó, a többiek 2, 3 nem osztunk ki."
+                <Label Content="1 akinek csak pár időpont jó, a többiek 2"
                        Foreground="White"
                        FontSize="17"
                        VerticalAlignment="Center"/>
 
-            </StackPanel>
+            </StackPanel>-->
 
             <StackPanel Orientation="Horizontal" Margin="0,10,0,20">
                 <Label Content="Család"
@@ -114,6 +134,26 @@
                        FontSize="17"
                        VerticalAlignment="Center"/>
             </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Csak családtaggal szeretne menni."
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       Margin="0,0,10,0"/>
+                <CheckBox x:Name="CB_csakCsalad" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Orientation="Horizontal">
+                <Label Content="Állapot (aktív/inaktív)"
+                       Foreground="White"
+                       VerticalAlignment="Center"
+                       FontSize="17"
+                       Margin="0,0,10,0"/>
+                <CheckBox x:Name="CB_aktiv" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Background="White" Height="3px" Margin="5,0,25,0"/>
 
             <Label Content="Szerda:" Foreground="White" FontSize="17"/>
             <StackPanel Orientation="Horizontal" Margin="5">

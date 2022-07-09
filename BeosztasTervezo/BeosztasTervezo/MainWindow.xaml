@@ -58,7 +58,7 @@
                              Style="{StaticResource MenuButtonTheme}"
                              Command="{Binding TervezoViewCommand}"/>
             </StackPanel>
-            <Label Content="Verziószám: 1.0"
+            <Label Content="Verziószám: 1.1"
                    Foreground="White"
                    FontSize="22"
                    Grid.Column="1"

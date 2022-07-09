@@ -44,7 +44,7 @@ namespace BeosztasTervezo.MVVM.View
             {
                 NevLista[DG_resztvevok.SelectedIndex].Nev = TB_Nev.Text;
                 NevLista[DG_resztvevok.SelectedIndex].Nem = CB_Nem.SelectedIndex + 1;
-                NevLista[DG_resztvevok.SelectedIndex].Prio = CB_Prio.SelectedIndex + 1;
+                //NevLista[DG_resztvevok.SelectedIndex].Prio = CB_Prio.SelectedIndex + 1;
                 NevLista[DG_resztvevok.SelectedIndex].CsaladId = int.Parse(TB_Csalad.Text);
 
                 NevLista[DG_resztvevok.SelectedIndex].sz8 = CB_SZ8.IsChecked.Value;
@@ -69,6 +69,8 @@ namespace BeosztasTervezo.MVVM.View
                 NevLista[DG_resztvevok.SelectedIndex].szo9 = CB_SZO9.IsChecked.Value;
                 NevLista[DG_resztvevok.SelectedIndex].szo10 = CB_SZO10.IsChecked.Value;
                 NevLista[DG_resztvevok.SelectedIndex].szo11 = CB_SZO11.IsChecked.Value;
+                NevLista[DG_resztvevok.SelectedIndex].csakCsaladdal = CB_csakCsalad.IsChecked.Value;
+                NevLista[DG_resztvevok.SelectedIndex].aktív = CB_aktiv.IsChecked.Value;
 
                 ResztvevoClass.MentesFajlba(NevLista);
                 MessageBoxResult result = MessageBox.Show("A módosítás sikeresen megtörtént!");
@@ -86,7 +88,7 @@ namespace BeosztasTervezo.MVVM.View
 
             TB_Nev.Text = NevLista[DG_resztvevok.SelectedIndex].Nev;
             CB_Nem.SelectedIndex = NevLista[DG_resztvevok.SelectedIndex].Nem-1;
-            CB_Prio.SelectedIndex = NevLista[DG_resztvevok.SelectedIndex].Prio-1;
+            //CB_Prio.SelectedIndex = NevLista[DG_resztvevok.SelectedIndex].Prio-1;
             TB_Csalad.Text = NevLista[DG_resztvevok.SelectedIndex].CsaladId.ToString();
 
             CB_SZ8.IsChecked = NevLista[DG_resztvevok.SelectedIndex].sz8;
@@ -111,16 +113,14 @@ namespace BeosztasTervezo.MVVM.View
             CB_SZO9.IsChecked = NevLista[DG_resztvevok.SelectedIndex].szo9;
             CB_SZO10.IsChecked = NevLista[DG_resztvevok.SelectedIndex].szo10;
             CB_SZO11.IsChecked = NevLista[DG_resztvevok.SelectedIndex].szo11;
+            CB_aktiv.IsChecked = NevLista[DG_resztvevok.SelectedIndex].aktív;
+            CB_csakCsalad.IsChecked = NevLista[DG_resztvevok.SelectedIndex].csakCsaladdal;
         }
 
         //Tervező
         private void BTN_Tervezés_Click(object sender, RoutedEventArgs e)
         {
-            //string[] beolvasottAdatok = File.ReadAllLines("Resztvevok.txt");
-            //for (int i = 0; i < beolvasottAdatok.Length; i++)
-            //{
-            //    NevLista.Add(new ResztvevoClass(beolvasottAdatok[i]));
-            //}
+            
 
             //A napok indexei 5-től kezdődnek ami a Szerda 8-9-ig terjedő időpont.
             ObservableCollection<ResztvevoClass> MutableNevLista = new ObservableCollection<ResztvevoClass>();
@@ -133,196 +133,265 @@ namespace BeosztasTervezo.MVVM.View
             List<int> banList = new List<int>();
             using (StreamWriter sw = new StreamWriter("Beosztas.txt"))
             {
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 6, banList);
-                sw.WriteLine("SZERDA CBA");
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-                vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+                if (CB_tervezoSzerda.IsChecked == true)
+                {
 
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 7, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-                vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 6, banList);
+                    sw.WriteLine("SZERDA CBA");
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 8, banList);
-                sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 9, banList);
-                sw.WriteLine("14:00-15:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 10, banList);
-                sw.WriteLine("15:00-16:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                 ;
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 11, banList);
-                sw.WriteLine("16:00-17:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 12, banList);
-                sw.WriteLine("17:00-18:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 5, banList);
-                sw.WriteLine("SZERDA VÁSÁRCSARNOK");
-                sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 6, banList);
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 7, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-
-
-                //A szerdai időpontok 12-ig vannak, utánna jön a péntek 8:00-tól.
-                banList.Clear();
-               
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 14, banList);
-                sw.WriteLine("PÉNTEK CBA");
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 15, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 16, banList);
-                sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 17, banList);
-                sw.WriteLine("14:00-15:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 18, banList);
-                sw.WriteLine("15:00-16:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 19, banList);
-                sw.WriteLine("16:00-17:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 20, banList);
-                sw.WriteLine("17:00-18:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 13, banList);
-                sw.WriteLine("PÉNTEK VÁSÁRCSARNOK");
-                sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 14, banList);
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 15, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-
-
-                //A pénteki időpontok 20-ig vannak, utánna jön a szombat 8:00-tól.
-                banList.Clear();
-
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 21, banList);
-                sw.WriteLine("SZOMBAT CBA");
-                sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 22, banList);
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 23, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 24, banList);
-                sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                sw.WriteLine("");
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 21, banList);
-                sw.WriteLine("SZOMBAT VÁSÁRCSARNOK");
-                sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 22, banList);
-                sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-               vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
-                 
-                
-
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 23, banList);
-                sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-                vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 7, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
 
 
 
-                segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 24, banList);
-                sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
-                vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 8, banList);
+                    sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
 
+
+
+                    sw.WriteLine("");
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 9, banList);
+                    sw.WriteLine("14:00-15:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 10, banList);
+                    sw.WriteLine("15:00-16:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+                    ;
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 11, banList);
+                    sw.WriteLine("16:00-17:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 12, banList);
+                    sw.WriteLine("17:00-18:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    sw.WriteLine("");
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 5, banList);
+                    sw.WriteLine("SZERDA VÁSÁRCSARNOK");
+                    sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 6, banList);
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 7, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(3.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+                    //A szerdai időpontok 12-ig vannak, utánna jön a péntek 8:00-tól.
+                    ResztvevoClass.MentesFajlba(MutableNevLista);
+                    banList.Clear();
+
+
+                    sw.WriteLine("");
+                }
+                if (CB_tervezoPentek.IsChecked == true)
+                {
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 14, banList);
+                    sw.WriteLine("PÉNTEK CBA");
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 15, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 16, banList);
+                    sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    sw.WriteLine("");
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 17, banList);
+                    sw.WriteLine("14:00-15:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 18, banList);
+                    sw.WriteLine("15:00-16:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 19, banList);
+                    sw.WriteLine("16:00-17:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 20, banList);
+                    sw.WriteLine("17:00-18:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    sw.WriteLine("");
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 13, banList);
+                    sw.WriteLine("PÉNTEK VÁSÁRCSARNOK");
+                    sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 14, banList);
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 15, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(5.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+                    //A pénteki időpontok 20-ig vannak, utánna jön a szombat 8:00-tól.
+                    ResztvevoClass.MentesFajlba(MutableNevLista);
+                    banList.Clear();
+
+
+                    sw.WriteLine("");
+                }
+                if (CB_tervezoSzombat.IsChecked == true)
+                {
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 21, banList);
+                    sw.WriteLine("SZOMBAT CBA");
+                    sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 22, banList);
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 23, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 24, banList);
+                    sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    sw.WriteLine("");
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 21, banList);
+                    sw.WriteLine("SZOMBAT VÁSÁRCSARNOK");
+                    sw.WriteLine("8:00-9:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 22, banList);
+                    sw.WriteLine("9:00-10:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 23, banList);
+                    sw.WriteLine("10:00-11:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+
+
+                    segedLista = ResztvevoClass.IdopontVizsgalat(MutableNevLista, 24, banList);
+                    sw.WriteLine("11:00-12:00 --> {0} - {1}", MutableNevLista[segedLista[0]].Nev, MutableNevLista[segedLista[1]].Nev);
+                    MutableNevLista[segedLista[0]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    MutableNevLista[segedLista[1]].resztvetelDatum = DateTime.Now.AddDays(6.0);
+                    vizsgalatUtanniLepesek(MutableNevLista, segedLista, banList);
+
+                    ResztvevoClass.MentesFajlba(MutableNevLista);
+                }
 
 
                 MessageBoxResult result = MessageBox.Show("A tervezés sikeresen befelyeződött. Biztonság esetére ellenőrizze hogy a beosztás megfelelő.");
@@ -330,51 +399,10 @@ namespace BeosztasTervezo.MVVM.View
         }
         public static void vizsgalatUtanniLepesek(ObservableCollection<ResztvevoClass>MutableNevLista, List<int> segedLista, List<int> banList)
         {
-            MutableNevLista[segedLista[0]].Prio = 3;
-            MutableNevLista[segedLista[1]].Prio = 3;
-            banList.Add(segedLista[0]);
-            banList.Add(segedLista[1]);
+            //banList.Add(segedLista[0]);
+            //banList.Add(segedLista[1]);
             segedLista.Clear();
-            //return banList;
-            //if (MutableNevLista[segedLista[0]].Prio == 1)
-            //{
-            //    MutableNevLista[segedLista[0]].Prio = 2;
-            //    MutableNevLista[segedLista[0]].alkalmak = 1;
-            //}
-            //else if (MutableNevLista[segedLista[0]].Prio == 2 && MutableNevLista[segedLista[0]].alkalmak == 0)
-            //{
-            //    MutableNevLista[segedLista[0]].alkalmak = 1;
-            //}
-            //else if (MutableNevLista[segedLista[0]].Prio == 2 && MutableNevLista[segedLista[0]].alkalmak == 1)
-            //{
-            //    MutableNevLista[segedLista[0]].alkalmak = 2;
-            //}
-            //else
-            //{
-            //    MutableNevLista[segedLista[0]].Prio = 3;
-            //}
-            ////---------------------------------------------
-            //if (MutableNevLista[segedLista[1]].Prio == 1)
-            //{
-            //    MutableNevLista[segedLista[1]].Prio = 2;
-            //    MutableNevLista[segedLista[1]].alkalmak = 1;
-            //}
-            //else if (MutableNevLista[segedLista[1]].Prio == 2 && MutableNevLista[segedLista[1]].alkalmak == 0)
-            //{
-            //    MutableNevLista[segedLista[1]].alkalmak = 1;
-            //}
-            //else if (MutableNevLista[segedLista[1]].Prio == 2 && MutableNevLista[segedLista[1]].alkalmak == 1)
-            //{
-            //    MutableNevLista[segedLista[1]].alkalmak = 2;
-            //}
-            //else
-            //{
-            //    MutableNevLista[segedLista[1]].Prio = 3;
-            //}
-            //MutableNevLista.RemoveAt(segedLista[0]);
-            //MutableNevLista.RemoveAt(segedLista[1]);
-            //segedLista.Clear();
-            //return MutableNevLista;
+            
         }
     }
 }

@@ -1,3 +1,3 @@
 # BeosztasTervezo
 
-A program nem indul el a megfelelő nésor nélkül. A névsor nem kerül közzétételre.
+A program nem indul el a megfelelő névsor nélkül. A névsor nem kerül közzétételre.
